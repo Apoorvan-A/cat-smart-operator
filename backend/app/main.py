@@ -1,19 +1,47 @@
 """FastAPI entrypoint. Owner: Claude 1.
 
-This is the integration-ready shell. Routers are registered per subsystem under
-app/api/v1. Business logic lives in services, not here. See docs/API_CONTRACT.md.
+Clean layering: routers (app/api/v1) -> services -> repositories/DB. Business
+logic never lives here. See docs/API_CONTRACT.md and docs/ARCHITECTURE.md.
 """
 from __future__ import annotations
+
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+import app.models  # noqa: F401 — registers all tables on Base.metadata
+from app.api.v1 import (
+    analytics,
+    assistant,
+    auth,
+    incidents,
+    machines,
+    operators,
+    safety,
+    tasks,
+    telemetry,
+    ws,
+)
 from app.core.config import settings
+from app.core.database import Base, engine
+from app.core.errors import register_error_handlers
+from app.core.logging import RequestTimingMiddleware, configure_logging
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    configure_logging()
+    # Prototype convenience: ensure tables exist. Production uses Alembic.
+    Base.metadata.create_all(engine)
+    yield
+
 
 app = FastAPI(
     title="CAT Smart Operator Assistant API",
     version="0.1.0",
     docs_url="/docs",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -23,6 +51,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(RequestTimingMiddleware)
+
+register_error_handlers(app)
 
 
 @app.get("/health", tags=["meta"])
@@ -31,9 +62,9 @@ def health() -> dict:
     return {"status": "ok", "env": settings.app_env}
 
 
-# Routers are wired here as each subsystem lands, e.g.:
-# from app.api.v1 import auth, tasks, telemetry, safety, machines, incidents, \
-#     training, analytics, assistant
-# for router in (auth, tasks, telemetry, safety, machines, incidents,
-#                training, analytics, assistant):
-#     app.include_router(router.router, prefix="/api/v1")
+for _router in (auth, operators, machines, tasks, telemetry, safety,
+                incidents, analytics, assistant):
+    app.include_router(_router.router, prefix="/api/v1")
+
+# WebSocket has no /api/v1 prefix (see API_CONTRACT.md: WS /ws).
+app.include_router(ws.router)
