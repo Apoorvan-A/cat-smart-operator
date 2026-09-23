@@ -1,0 +1,28 @@
+# Code ownership -> auto-requests review from the right owner on each PR.
+# Replace @Apoorvan-A placeholders with each teammate's GitHub username.
+#
+#   Backend + Safety  -> Human 2  (Claude 1)
+#   ML + Data         -> Human 3  (Claude 2)
+#   Frontend + UX     -> Human 4  (Claude 3)
+#   Architecture/QA   -> Human 1  (Claude 4)
+
+# Default owner
+*                       @Apoorvan-A
+
+# Backend + Safety
+/backend/               @Apoorvan-A
+
+# ML + Data
+/ml/                    @Apoorvan-A
+/simulator/             @Apoorvan-A
+
+# Frontend + UX
+/frontend/              @Apoorvan-A
+
+# Architecture / Integration / QA (shared contracts — review carefully)
+/docs/                  @Apoorvan-A
+/tests/                 @Apoorvan-A
+/demo/                  @Apoorvan-A
+/docker/                @Apoorvan-A
+/.github/               @Apoorvan-A
+/docker-compose.yml     @Apoorvan-A

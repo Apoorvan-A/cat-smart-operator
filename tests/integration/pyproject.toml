@@ -1,0 +1,8 @@
+# Pytest config for the integration/scenario tests. Owner: Claude 4.
+# Not an installable package — these are plain test modules. Install deps with:
+#   pip install pytest httpx
+[tool.pytest.ini_options]
+testpaths = ["."]
+markers = [
+    "requires_stack: test needs the docker-compose stack running (skipped otherwise)",
+]

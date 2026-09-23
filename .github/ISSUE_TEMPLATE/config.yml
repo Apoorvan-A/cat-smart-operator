@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Architecture & contracts
+    url: https://github.com/Apoorvan-A/cat-smart-operator/tree/main/docs
+    about: Read CLAUDE.md and docs/ (API_CONTRACT is the source of truth) before opening a task.

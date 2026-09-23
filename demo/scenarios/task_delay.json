@@ -1,0 +1,20 @@
+{
+  "id": "task_delay",
+  "title": "Task delay from weather",
+  "description": "Rainfall worsens, cycle times lengthen, and the ETA model moves the predicted completion from 14:30 to 14:47 with an explanation. Falls back to a historical estimate if the ML service is unavailable.",
+  "machine_id": "EXC001",
+  "operator_id": "OP1001",
+  "task_id": "T-101",
+  "steps": [
+    { "t_seconds": 0, "inject_weather": { "rainfall": 0.0, "visibility": 10.0 },
+      "expect": { "predicted_eta": "2025-05-01T14:30:00Z" } },
+    { "t_seconds": 10, "inject_weather": { "rainfall": 6.0, "visibility": 4.0 },
+      "inject": { "cycle_time": 47.0 },
+      "expect": { "task_state": "AT_RISK", "predicted_eta": "2025-05-01T14:47:00Z",
+        "provenance": "PREDICTED", "fallback_used": false,
+        "explanation": { "what": "ETA moved from 14:30 to 14:47",
+          "why": "Heavy rainfall increased average cycle time ~12%",
+          "action": "No action needed; monitor site drainage" } } }
+  ],
+  "provenance": "SIMULATED"
+}

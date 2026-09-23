@@ -1,0 +1,18 @@
+{
+  "id": "machine_health_anomaly",
+  "title": "Machine health anomaly",
+  "description": "Engine temperature and fuel pattern drift away from the machine baseline. The anomaly/health model flags it, assigns severity, and recommends inspection. Responsible language only — no exact failure prediction.",
+  "machine_id": "EXC001",
+  "operator_id": "OP1001",
+  "baseline": { "engine_temperature": 92, "fuel_rate": 11.5 },
+  "steps": [
+    { "t_seconds": 0, "inject": { "machine_state": "OPERATING", "engine_temperature": 93, "fuel_rate": 11.6 } },
+    { "t_seconds": 10, "inject": { "engine_temperature": 104, "fuel_rate": 14.2 } },
+    { "t_seconds": 20, "inject": { "engine_temperature": 109, "fuel_rate": 15.1 },
+      "expect": { "health_state": "DEGRADED", "provenance": "PREDICTED",
+        "explanation": { "what": "Temperature and fuel rate rising vs machine baseline",
+          "why": "Sustained deviation over the last cycles",
+          "action": "Maintenance attention recommended — schedule inspection" } } }
+  ],
+  "provenance": "SIMULATED"
+}
