@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
 COPY pyproject.toml ./
-RUN pip install --upgrade pip && pip install -e ".[dev]" || pip install fastapi "uvicorn[standard]" sqlalchemy alembic "psycopg[binary]" pydantic pydantic-settings "python-jose[cryptography]" passlib[bcrypt] python-multipart httpx
+RUN pip install --upgrade pip && pip install -e ".[dev]" || pip install fastapi "uvicorn[standard]" sqlalchemy alembic "psycopg[binary]" pydantic pydantic-settings "python-jose[cryptography]" "bcrypt>=4.1" python-multipart httpx
 
 COPY . .
 

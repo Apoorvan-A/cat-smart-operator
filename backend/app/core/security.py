@@ -3,22 +3,26 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
+import bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from app.core.config import settings
 
-_pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Use bcrypt directly (not passlib): passlib 1.7.x cannot introspect bcrypt >=4.1
+# and fails its self-test on CI. bcrypt's hard limit is 72 bytes, so we truncate.
+_MAX_BCRYPT_BYTES = 72
 
 
 def hash_password(plain: str) -> str:
-    return _pwd.hash(plain)
+    pw = plain.encode("utf-8")[:_MAX_BCRYPT_BYTES]
+    return bcrypt.hashpw(pw, bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
     try:
-        return _pwd.verify(plain, hashed)
-    except ValueError:
+        pw = plain.encode("utf-8")[:_MAX_BCRYPT_BYTES]
+        return bcrypt.checkpw(pw, hashed.encode("utf-8"))
+    except (ValueError, TypeError):
         return False
 
 
