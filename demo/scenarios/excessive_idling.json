@@ -1,0 +1,17 @@
+{
+  "id": "excessive_idling",
+  "title": "Excessive idling",
+  "description": "Idle time climbs well above the operator's recent baseline. The system emits an unusual-operation insight (WHAT/WHY/ACTION), not a safety alert.",
+  "machine_id": "EXC001",
+  "operator_id": "OP1001",
+  "baseline": { "avg_idle_minutes": 21 },
+  "steps": [
+    { "t_seconds": 0, "inject": { "machine_state": "IDLE", "idle_time": 10 } },
+    { "t_seconds": 8, "inject": { "machine_state": "IDLE", "idle_time": 42 },
+      "expect": { "insight_type": "EXCESSIVE_IDLING", "provenance": "OBSERVED",
+        "explanation": { "what": "Idle time is 42 minutes",
+          "why": "Your recent average is 21 minutes",
+          "action": "Consider shutting down the engine during extended waits" } } }
+  ],
+  "provenance": "SIMULATED"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "proximity_hazard",
+  "title": "Proximity hazard",
+  "description": "A worker enters the machine's danger zone (3.2 m, threshold 5 m). Deterministic rule raises a HIGH alert shown on the work-zone map; operator acknowledges.",
+  "machine_id": "EXC001",
+  "operator_id": "OP1001",
+  "steps": [
+    { "t_seconds": 0, "inject": { "machine_state": "OPERATING" } },
+    { "t_seconds": 6, "inject_proximity": { "entity_type": "WORKER", "entity_id": "W103", "distance_m": 7.0, "threshold_m": 5.0 } },
+    { "t_seconds": 12, "inject_proximity": { "entity_type": "WORKER", "entity_id": "W103", "distance_m": 3.2, "threshold_m": 5.0 },
+      "expect": { "safety_event": "PROXIMITY_HAZARD", "severity": "HIGH" } },
+    { "t_seconds": 18, "operator_action": "acknowledge",
+      "expect": { "alert_status": "ACKNOWLEDGED", "audit_record": true } }
+  ],
+  "provenance": "SIMULATED"
+}

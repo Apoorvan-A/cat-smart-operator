@@ -1,0 +1,12 @@
+[project]
+name = "cat-operator-integration-tests"
+version = "0.1.0"
+description = "Integration + scenario tests. Owner: Claude 4."
+requires-python = ">=3.11"
+dependencies = ["pytest>=8", "httpx>=0.27"]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+markers = [
+    "requires_stack: test needs the docker-compose stack running (skipped otherwise)",
+]
