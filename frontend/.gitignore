@@ -1,0 +1,3 @@
+# Frontend build artifacts (root .gitignore already covers node_modules/ dist/)
+*.tsbuildinfo
+.vite/
