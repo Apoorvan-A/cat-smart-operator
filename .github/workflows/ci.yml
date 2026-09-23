@@ -58,8 +58,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install integration deps
-        working-directory: tests/integration
-        run: pip install -e .
+        run: pip install pytest httpx
       - name: Scenario + integration tests (live-stack tests skip)
         working-directory: tests/integration
         run: pytest -q
