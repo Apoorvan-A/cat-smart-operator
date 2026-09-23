@@ -29,6 +29,21 @@ tests/           # unit + service tests (pytest)
 ## Run
 ```bash
 pip install -e ".[dev]"
-uvicorn app.main:app --reload   # http://localhost:8000/docs
-pytest
+
+# Quick local run with SQLite (no Postgres needed):
+export DATABASE_URL="sqlite:///./dev.db"   # PowerShell: $env:DATABASE_URL="sqlite:///./dev.db"
+python -m app.seed                          # demo data: operator OP1001 / password 'demo'
+uvicorn app.main:app --reload               # http://localhost:8000/docs
+
+pytest                                       # 30 tests (SQLite, no server needed)
 ```
+
+In Docker, `DATABASE_URL` points at Postgres (see `.env` / `docker-compose.yml`).
+
+## What's implemented
+Auth+JWT+RBAC · telemetry ingest (validate/dedup/quarantine) · **deterministic
+safety engine** (seatbelt, worker/vehicle proximity, overspeed, unsafe slope,
+sudden movement) · alert grouping + acknowledge/escalate + audit · machine health
+· tasks + dynamic ETA (ML client w/ fallback) · incidents w/ timeline · training
+recommendations · fuel/productivity analytics · grounded AI assistant · WebSocket
+hub. Tables auto-create on startup for the prototype; Alembic for production.
